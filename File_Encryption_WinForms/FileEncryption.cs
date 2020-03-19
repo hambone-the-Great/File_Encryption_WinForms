@@ -49,7 +49,7 @@ namespace File_Encryption_WinForms
         {
 
             File.WriteAllText(SuccessLog, "");
-            //File.WriteAllText(ErrorLog, "");
+            File.WriteAllText(ErrorLog, "");
 
             using (StreamWriter w = File.AppendText(ErrorLog))
             {
@@ -248,6 +248,8 @@ namespace File_Encryption_WinForms
             if (HasErrors) Process.Start(ErrorLog);            
             pBar.SendToBack();
             txtTarget.Text = string.Empty;
+            btnDecrypt.Enabled = false;
+            btnEncrypt.Enabled = false; 
         }
     }
 }
