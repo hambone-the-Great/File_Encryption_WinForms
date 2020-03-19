@@ -42,6 +42,23 @@ namespace File_Encryption_WinForms
             pBar.Maximum = 100;
             this.MaximumSize = this.Size;
             this.MinimumSize = this.Size;
+
+
+            File.WriteAllText(SuccessLog, "");
+            File.WriteAllText(ErrorLog, "");
+
+            using (StreamWriter w = File.AppendText(ErrorLog))
+            {
+                w.WriteLine("File Encryption Error Log");
+                w.WriteLine(DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + "\r\n\r\n");
+            }
+
+            using (StreamWriter w = File.AppendText(SuccessLog))
+            {
+                w.WriteLine("File Encryption Success Log");
+                w.WriteLine(DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + "\r\n\r\n");
+            }
+
         }
         
 
@@ -118,8 +135,6 @@ namespace File_Encryption_WinForms
                 }
             }
 
-            //percentage = (i + 1) * 100 / FileCount;
-            //bgWorker.ReportProgress(percentage);
         }
 
 
@@ -237,9 +252,13 @@ namespace File_Encryption_WinForms
             string[] fileList = (string[])e.Data.GetData(DataFormats.FileDrop, false);
             txtTarget.Text = fileList[0];
 
-            if (Directory.Exists(txtTarget.Text) || File.Exists(txtTarget.Text))
+            if (Directory.Exists(txtTarget.Text))
             {
                 FileCount = Directory.GetFiles(txtTarget.Text, "*.*", SearchOption.AllDirectories).Length;
+            }
+            else if (File.Exists(txtTarget.Text))
+            {
+                FileCount = 1; 
             }
         }
 
@@ -279,6 +298,7 @@ namespace File_Encryption_WinForms
             else
             {
                 MessageBox.Show("Someting went wrong.");
+                LogError("Current Task Not Defined");
             }
         }
 
