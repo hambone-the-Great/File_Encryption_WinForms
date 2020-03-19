@@ -43,9 +43,13 @@ namespace File_Encryption_WinForms
             this.MaximumSize = this.Size;
             this.MinimumSize = this.Size;
 
+        }
+        
+        private void PrepLogs()
+        {
 
             File.WriteAllText(SuccessLog, "");
-            File.WriteAllText(ErrorLog, "");
+            //File.WriteAllText(ErrorLog, "");
 
             using (StreamWriter w = File.AppendText(ErrorLog))
             {
@@ -60,12 +64,14 @@ namespace File_Encryption_WinForms
             }
 
         }
-        
 
-        private void Encrypt(string path)
+        private void ProcessTarget(string path, Task task)
         {
+
             FileAttributes attr = File.GetAttributes(path);
-            
+
+            PrepLogs();
+
             int i = 0;
 
             if (attr.HasFlag(FileAttributes.Directory))
@@ -77,9 +83,10 @@ namespace File_Encryption_WinForms
                     {
                         try
                         {
-                            File.Encrypt(file);
-                            Console.WriteLine("Encrypting: " + file);
-                            LogSuccess("encrypted", file);                            
+                            if (task == Task.Encrypt) File.Encrypt(file);
+                            else if (task == Task.Decrypt) File.Decrypt(file);
+                            Console.WriteLine(task.ToString() + "ing: " + file);
+                            LogSuccess(task.ToString() + "ed", file);                            
                         }
                         catch (Exception ex)
                         {
@@ -100,9 +107,10 @@ namespace File_Encryption_WinForms
                             {
                                 try
                                 {
-                                    File.Encrypt(file);
-                                    Console.WriteLine("Encrypting: " + file);
-                                    LogSuccess("encrypted", file);
+                                    if (task == Task.Encrypt) File.Encrypt(file);
+                                    else if (task == Task.Decrypt) File.Decrypt(file);
+                                    Console.WriteLine(task.ToString() + "ing: " + file);
+                                    LogSuccess(task.ToString() + "ed", file);
                                 }
                                 catch (Exception ex)
                                 {
@@ -122,9 +130,10 @@ namespace File_Encryption_WinForms
                 {
                     try
                     {
-                        File.Encrypt(path);
-                        Console.WriteLine("Encrypting: " + path);
-                        LogSuccess("encrypted", path);
+                        if (task == Task.Encrypt) File.Encrypt(path);
+                        else if (task == Task.Decrypt) File.Decrypt(path);
+                        Console.WriteLine(task.ToString() + "ing: " + path);
+                        LogSuccess(task.ToString() + "ed", path);
                     }
                     catch (Exception ex)
                     {
@@ -135,84 +144,90 @@ namespace File_Encryption_WinForms
                 }
             }
 
+            using (StreamWriter w = File.AppendText(SuccessLog))
+            {
+                w.WriteLine("\n\rJob Completed at: " + DateTime.Now.ToLongTimeString() + " " + DateTime.Now.ToLongDateString());
+                w.WriteLine("--------------------------------------------------------------------------------------------\n\r\n\r");
+            }
+
         }
 
 
-        private void Decrypt(string path)
-        {
-            FileAttributes attr = File.GetAttributes(path);
+        //private void Decrypt(string path)
+        //{
+        //    FileAttributes attr = File.GetAttributes(path);
 
-            int i = 0;
+        //    int i = 0;
 
-            if (attr.HasFlag(FileAttributes.Directory))
-            {
+        //    if (attr.HasFlag(FileAttributes.Directory))
+        //    {
 
-                foreach (string file in Directory.GetFiles(path))
-                {
-                    if (File.Exists(file))
-                    {
-                        try
-                        {
-                            File.Decrypt(file);
-                            Console.WriteLine("Decrypting: " + file);
-                            LogSuccess("decrypted", file);
-                        }
-                        catch (Exception ex)
-                        {
-                            LogError(ex.Message);
-                            Console.WriteLine("Error: " + ex.Message);
-                        }
-                        UpdateProgress(i++);
-                    }
-                }
+        //        foreach (string file in Directory.GetFiles(path))
+        //        {
+        //            if (File.Exists(file))
+        //            {
+        //                try
+        //                {
+        //                    File.Decrypt(file);
+        //                    Console.WriteLine("Decrypting: " + file);
+        //                    LogSuccess("decrypted", file);
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    LogError(ex.Message);
+        //                    Console.WriteLine("Error: " + ex.Message);
+        //                }
+        //                UpdateProgress(i++);
+        //            }
+        //        }
 
-                foreach (string subDir in Directory.GetDirectories(path))
-                {
-                    if (Directory.Exists(subDir))
-                    {
-                        foreach (string file in Directory.GetFiles(subDir))
-                        {
-                            if (File.Exists(file))
-                            {
-                                try
-                                {
-                                    File.Decrypt(file);
-                                    Console.WriteLine("Decrypting: " + file);
-                                    LogSuccess("decrypted", file);
-                                }
-                                catch (Exception ex)
-                                {
-                                    LogError(ex.Message);
-                                    Console.WriteLine("Error: " + ex.Message);
-                                }
-                                UpdateProgress(i++);
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
+        //        foreach (string subDir in Directory.GetDirectories(path))
+        //        {
+        //            if (Directory.Exists(subDir))
+        //            {
+        //                foreach (string file in Directory.GetFiles(subDir))
+        //                {
+        //                    if (File.Exists(file))
+        //                    {
+        //                        try
+        //                        {
+        //                            File.Decrypt(file);
+        //                            Console.WriteLine("Decrypting: " + file);
+        //                            LogSuccess("decrypted", file);
+        //                        }
+        //                        catch (Exception ex)
+        //                        {
+        //                            LogError(ex.Message);
+        //                            Console.WriteLine("Error: " + ex.Message);
+        //                        }
+        //                        UpdateProgress(i++);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
 
-                if (File.Exists(path))
-                {
-                    try
-                    {
-                        File.Decrypt(path);
-                        Console.WriteLine("Decrypting: " + path);
-                        LogSuccess("decrypted", path);
+        //        if (File.Exists(path))
+        //        {
+        //            try
+        //            {
+        //                File.Decrypt(path);
+        //                Console.WriteLine("Decrypting: " + path);
+        //                LogSuccess("decrypted", path);
                         
 
-                    }
-                    catch (Exception ex)
-                    {
-                        LogError(ex.Message);
-                        Console.WriteLine("Error: " + ex.Message);
-                    }
-                    UpdateProgress(i++);
-                }
-            }
-        }
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                LogError(ex.Message);
+        //                Console.WriteLine("Error: " + ex.Message);
+        //            }
+        //            UpdateProgress(i++);
+        //        }
+        //    }
+        //}
 
         private void UpdateProgress(int count)
         {            
@@ -287,19 +302,22 @@ namespace File_Encryption_WinForms
 
         private void BgWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            if (CurrentTask == Task.Encrypt)
-            {
-                Encrypt(txtTarget.Text);
-            }
-            else if (CurrentTask == Task.Decrypt)
-            {
-                Decrypt(txtTarget.Text);
-            }
-            else
-            {
-                MessageBox.Show("Someting went wrong.");
-                LogError("Current Task Not Defined");
-            }
+            //if (CurrentTask == Task.Encrypt)
+            //{
+            //    Encrypt(txtTarget.Text);
+            //}
+            //else if (CurrentTask == Task.Decrypt)
+            //{
+            //    Decrypt(txtTarget.Text);
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Someting went wrong.");
+            //    LogError("Current Task Not Defined");
+            //}
+
+            ProcessTarget(txtTarget.Text, CurrentTask);
+
         }
 
         private void BgWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
