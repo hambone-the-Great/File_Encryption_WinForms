@@ -70,7 +70,7 @@ namespace File_Encryption_WinForms
 
             if (path == null)
             {
-                MessageBox.Show("Error! Path of target was null.");
+                MessageBox.Show("Error! Path of target was null. Try again.");                
             }
             else
             { 
