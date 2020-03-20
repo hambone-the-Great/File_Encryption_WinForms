@@ -18,8 +18,8 @@ namespace File_Encryption_WinForms
     {
 
         private bool HasErrors = false;
-        private string SuccessLog = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "File_Encryption_Success.log");
-        private string ErrorLog = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "File_Encryption_Error.log");
+        private string SuccessLog = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "File_Encryption_Success.log");
+        private string ErrorLog = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "File_Encryption_Error.log");
         int FileCount = 0; 
 
         private Task CurrentTask; 
@@ -250,6 +250,14 @@ namespace File_Encryption_WinForms
             txtTarget.Text = string.Empty;
             btnDecrypt.Enabled = false;
             btnEncrypt.Enabled = false; 
+        }
+
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = Directory.GetCurrentDirectory();
+            var url = new Uri(Path.Combine(path, "resources/about.htm"));
+            Process.Start(url.ToString());
+
         }
     }
 }
