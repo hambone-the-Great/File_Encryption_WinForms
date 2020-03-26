@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>File_Encryption_WinForms</RootNamespace>
     <AssemblyName>File_Encryption_WinForms</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -131,6 +131,12 @@
     <Content Include="resources\lock.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CustomMessageBox\CustomMessageBox\CustomMessageBox.csproj">
+      <Project>{1fd208fb-c477-447a-b4aa-9e01ff74a1cf}</Project>
+      <Name>CustomMessageBox</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

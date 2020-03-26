@@ -11,6 +11,7 @@ using System.IO;
 using System.Security.AccessControl;
 using System.Diagnostics;
 using System.Security.Permissions;
+using CustomMessageBox;
 
 namespace File_Encryption_WinForms
 {
@@ -18,8 +19,8 @@ namespace File_Encryption_WinForms
     {
 
         private bool HasErrors = false;
-        private string SuccessLog = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "File_Encryption_Success.log");
-        private string ErrorLog = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "File_Encryption_Error.log");
+        private string SuccessLog = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "File_Encryption_Success.htm");
+        private string ErrorLog = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "File_Encryption_Error.htm");
         int FileCount = 0; 
 
         private Task CurrentTask; 
@@ -53,14 +54,14 @@ namespace File_Encryption_WinForms
 
             using (StreamWriter w = File.AppendText(ErrorLog))
             {
-                w.WriteLine("File Encryption Error Log");
-                w.WriteLine(DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + "\r\n\r\n");
+                w.WriteLine("<h1>File Encryption Error Log</h1>");
+                w.WriteLine("<h3>" + DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + "</h3><br /><br />");
             }
 
             using (StreamWriter w = File.AppendText(SuccessLog))
             {
-                w.WriteLine("File Encryption Success Log");
-                w.WriteLine(DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + "\r\n\r\n");
+                w.WriteLine("<h1>File Encryption Success Log</h1>");
+                w.WriteLine("<h3>" + DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + "</h3><br /><br />");
             }
 
         }
@@ -70,7 +71,8 @@ namespace File_Encryption_WinForms
 
             if (path == null)
             {
-                MessageBox.Show("Error! Path of target was null. Try again.");                
+                MessageBox.Show("Error! Path of target was null. Try again.");
+                LogError("Target path was null.");
             }
             else
             { 
@@ -152,8 +154,8 @@ namespace File_Encryption_WinForms
 
                 using (StreamWriter w = File.AppendText(SuccessLog))
                 {
-                    w.WriteLine("\n\rJob Completed at: " + DateTime.Now.ToLongTimeString() + " " + DateTime.Now.ToLongDateString());
-                    w.WriteLine("--------------------------------------------------------------------------------------------\n\r\n\r");
+                    w.WriteLine("<p>Job Completed at: " + DateTime.Now.ToLongTimeString() + " " + DateTime.Now.ToLongDateString() + "</p>");
+                    w.WriteLine("<p>--------------------------------------------------------------------------------------------</p>");
                 }
             }
 
@@ -174,7 +176,7 @@ namespace File_Encryption_WinForms
 
             using (StreamWriter w = File.AppendText(ErrorLog))
             {
-                w.WriteLine(errorText);
+                w.WriteLine("<p>" + errorText + "</p>");
             }
         }
 
@@ -183,7 +185,7 @@ namespace File_Encryption_WinForms
 
             using (StreamWriter w = File.AppendText(SuccessLog))
             {
-                w.WriteLine("Succesfully " + action + " file: " + filePath);
+                w.WriteLine("<p>Succesfully " + action + " file: " + filePath + "</p>");
             }
         }
 
@@ -239,24 +241,38 @@ namespace File_Encryption_WinForms
 
         private void BgWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            pBar.Value = e.ProgressPercentage;
+            if (e.ProgressPercentage > 0)
+            {
+                pBar.Value = e.ProgressPercentage;
+            }
         }
 
         private void BgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Process.Start(SuccessLog);
-            if (HasErrors) Process.Start(ErrorLog);            
-            pBar.SendToBack();
+            pBar.Value = 100;
+
+            MsgBx msgbx = new MsgBx(SuccessLog);
+            msgbx.Show();
+
+            if (HasErrors)
+            {
+                MsgBx msgbx2 = new MsgBx(ErrorLog);
+                msgbx2.Show();                
+            }
+            
             txtTarget.Text = string.Empty;
             btnDecrypt.Enabled = false;
-            btnEncrypt.Enabled = false; 
+            btnEncrypt.Enabled = false;
+            pBar.SendToBack();
         }
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string path = Directory.GetCurrentDirectory();
             var url = new Uri(Path.Combine(path, "resources/about.htm"));
-            Process.Start(url.ToString());
+            //Process.Start(url.ToString());
+            MsgBx msgbx = new MsgBx(url.ToString());
+            msgbx.Show();
 
         }
     }
