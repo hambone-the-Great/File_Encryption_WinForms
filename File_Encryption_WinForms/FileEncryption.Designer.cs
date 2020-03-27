@@ -104,19 +104,19 @@
             // menuStrip1
             // 
             this.menuStrip1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.menuStrip1.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.menuStrip1.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(590, 25);
+            this.menuStrip1.Size = new System.Drawing.Size(590, 28);
             this.menuStrip1.TabIndex = 5;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(60, 21);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(66, 24);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
